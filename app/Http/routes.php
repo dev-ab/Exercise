@@ -16,5 +16,5 @@ Route::get('/', function () {
 });
 
 Route::auth();
-
-Route::get('/home', 'HomeController@index');
+Route::post('/login', 'Auth\AuthController@authenticate');
+Route::get('/home', 'ManagerController@index');
