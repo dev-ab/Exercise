@@ -77,11 +77,13 @@ use AuthenticatesAndRegistersUsers,
     public function authenticate(Request $request) {
         $email = $request->input('email');
         $password = $request->input('password');
-        
+
         if (Auth::attempt(['email' => $email, 'password' => $password]) ||
                 Auth::attempt(['username' => $email, 'password' => $password])) {
             // Authentication passed...
             return redirect()->intended('/home');
+        } else {
+            abort('503');
         }
     }
 

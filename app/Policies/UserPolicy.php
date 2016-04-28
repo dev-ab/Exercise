@@ -18,8 +18,16 @@ class UserPolicy {
         //
     }
 
+    public function index(User $user) {
+        return true;
+    }
+
     public function view_users(User $user) {
-        
+        return true;
+    }
+
+    public function view_groups(User $user) {
+        return true;
     }
 
 }

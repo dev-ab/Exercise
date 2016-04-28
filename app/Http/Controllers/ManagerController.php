@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Auth;
+use JavaScript;
 
 class ManagerController extends Controller {
 
@@ -23,19 +25,28 @@ class ManagerController extends Controller {
      */
     //view home page for users
     public function index() {
-        return view('home');
+        $this->authorize(Auth::user());
+        JavaScript::put([
+            'user' => Auth::user()
+        ]);
+
+        return view('home', ['user' => Auth::user()]);
+    }
+
+    public function profile() {
+        return view('profile');
     }
 
     //view system users
     public function view_users() {
-        
-        $this->authorize($user);
-        
+
+        $this->authorize();
+
         return view('home');
     }
 
     //edit users info
-    public function edit_users() {
+    public function edit_user() {
         return view('home');
     }
 
@@ -45,7 +56,7 @@ class ManagerController extends Controller {
     }
 
     //edit security groups
-    public function edit_groups() {
+    public function edit_group() {
         return view('home');
     }
 
@@ -55,7 +66,7 @@ class ManagerController extends Controller {
     }
 
     // edit user projects
-    public function edit_projects() {
+    public function edit_project() {
         return view('home');
     }
 

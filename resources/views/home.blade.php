@@ -1,17 +1,99 @@
-@extends('layouts.app')
+@extends('layout')
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+@section('title', trans('client.add'))
 
-                <div class="panel-body">
-                    You are logged in!
-                </div>
+@section('styles')
+@endsection
+
+@section('container')
+<div class="page-container">
+
+    <!-- BEGIN PAGE HEAD -->
+    <div class="page-head">
+        <div class="container">
+            <!-- BEGIN PAGE TITLE -->
+            <div class="page-title">
+                <h1>{{ trans('client.add_new')}}</h1>
             </div>
+            <!-- END PAGE TITLE -->
+
         </div>
     </div>
+    <!-- END PAGE HEAD -->
+
+    <!-- BEGIN PAGE CONTENT -->
+    <div class="page-content">
+        <div class="container">
+            <!-- BEGIN PAGE CONTENT INNER -->
+            <div class='portlet light'>
+                <div class='portlet-body'>
+                    <div class="tiles">
+                        <a href='/profile'>
+                            <div class="tile double bg-blue-hoki">
+                                <div class="tile-body">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name" style='padding-left:35%;'>
+                                        My Profile
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        @can('view_users', $user)
+                        <a href='/view-users'>
+                            <div class="tile double bg-red-sunglo">
+                                <div class="tile-body">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name" style='padding-left:30%;'>
+                                        Manage Users
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        @endcan
+                        @can('view_groups', $user)
+                        <a href='/view-groups'>
+                            <div class="tile double bg-blue-madison">
+                                <div class="tile-body">
+                                    <i class="fa fa-unlock-alt"></i>
+                                </div>
+                                <div class="tile-object">
+                                    <div class="name" style='padding-left:30%;'>
+                                        Manage Groups
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        @endcan
+                    </div>
+                </div>
+            </div>
+            <!-- END PAGE CONTENT INNER -->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT -->
 </div>
+@endsection
+
+@section('plugins')
+@endsection
+
+@section('scripts')
+<script src="{{ url('/')}}/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="{{ url('/')}}/assets/admin/layout3/scripts/layout.js" type="text/javascript"></script>
+<script src="{{ url('/')}}/assets/admin/layout3/scripts/demo.js" type="text/javascript"></script>
+@endsection
+
+@section('javascript')
+<script>
+jQuery(document).ready(function () {
+    // initiate layout and plugins
+    Metronic.init(); // init metronic core components
+    Layout.init(); // init current layout
+    Demo.init();
+});
+</script>
 @endsection
