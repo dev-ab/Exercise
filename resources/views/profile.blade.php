@@ -3,13 +3,14 @@
 @section('title', trans('client.add'))
 
 @section('styles')
+<link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />
 <link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" />
 <link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/admin/pages/css/profile.css" />
 <link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/admin/pages/css/tasks.css" />
 @endsection
 
 @section('container')
-<div class="page-container" ng-controller="HomeController">
+<div class="page-container" ng-controller="ProfileController">
 
     <!-- BEGIN PAGE HEAD -->
     <div class="page-head">
@@ -71,86 +72,17 @@
                                 </div>
                             </div>
                             <!-- END SIDEBAR USER TITLE -->
-                            <!-- SIDEBAR BUTTONS -->
-                            <div class="profile-userbuttons">
-                                <button type="button" class="btn btn-circle green-haze btn-sm">Follow</button>
-                                <button type="button" class="btn btn-circle btn-danger btn-sm">Message</button>
-                            </div>
-                            <!-- END SIDEBAR BUTTONS -->
                             <!-- SIDEBAR MENU -->
                             <div class="profile-usermenu">
                                 <ul class="nav">
-                                    <li>
-                                        <a href="extra_profile.html">
+                                    <li class="active">
+                                        <a href="#">
                                             <i class="icon-home"></i>
                                             Overview </a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="extra_profile_account.html">
-                                            <i class="icon-settings"></i>
-                                            Account Settings </a>
-                                    </li>
-                                    <li>
-                                        <a href="page_todo.html" target="_blank">
-                                            <i class="icon-check"></i>
-                                            Tasks </a>
-                                    </li>
-                                    <li>
-                                        <a href="extra_profile_help.html">
-                                            <i class="icon-info"></i>
-                                            Help </a>
                                     </li>
                                 </ul>
                             </div>
                             <!-- END MENU -->
-                        </div>
-                        <!-- END PORTLET MAIN -->
-                        <!-- PORTLET MAIN -->
-                        <div class="portlet light">
-                            <!-- STAT -->
-                            <div class="row list-separated profile-stat">
-                                <div class="col-md-4 col-sm-4 col-xs-6">
-                                    <div class="uppercase profile-stat-title">
-                                        37
-                                    </div>
-                                    <div class="uppercase profile-stat-text">
-                                        Projects
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-6">
-                                    <div class="uppercase profile-stat-title">
-                                        51
-                                    </div>
-                                    <div class="uppercase profile-stat-text">
-                                        Tasks
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-xs-6">
-                                    <div class="uppercase profile-stat-title">
-                                        61
-                                    </div>
-                                    <div class="uppercase profile-stat-text">
-                                        Uploads
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END STAT -->
-                            <div>
-                                <h4 class="profile-desc-title">About Marcus Doe</h4>
-                                <span class="profile-desc-text"> Lorem ipsum dolor sit amet diam nonummy nibh dolore. </span>
-                                <div class="margin-top-20 profile-desc-link">
-                                    <i class="fa fa-globe"></i>
-                                    <a href="http://www.keenthemes.com">www.keenthemes.com</a>
-                                </div>
-                                <div class="margin-top-20 profile-desc-link">
-                                    <i class="fa fa-twitter"></i>
-                                    <a href="http://www.twitter.com/keenthemes/">@keenthemes</a>
-                                </div>
-                                <div class="margin-top-20 profile-desc-link">
-                                    <i class="fa fa-facebook"></i>
-                                    <a href="http://www.facebook.com/keenthemes/">keenthemes</a>
-                                </div>
-                            </div>
                         </div>
                         <!-- END PORTLET MAIN -->
                     </div>
@@ -173,10 +105,10 @@
                                                 <a href="#tab_1_2" data-toggle="tab">Change Avatar</a>
                                             </li>
                                             <li>
-                                                <a href="#tab_1_3" data-toggle="tab">Change Password</a>
+                                                <a href="#tab_1_3" data-toggle="tab">Security</a>
                                             </li>
                                             <li>
-                                                <a href="#tab_1_4" data-toggle="tab">Privacy Settings</a>
+                                                <a href="#tab_1_4" data-toggle="tab">Portfolio</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -184,34 +116,26 @@
                                         <div class="tab-content">
                                             <!-- PERSONAL INFO TAB -->
                                             <div class="tab-pane active" id="tab_1_1">
-                                                <form role="form" action="#">
+                                                <form role="form" action="#" ng-submit="">
                                                     <div class="form-group">
-                                                        <label class="control-label">First Name</label>
-                                                        <input type="text" placeholder="John" class="form-control"/>
+                                                        <label class="control-label">Title</label>
+                                                        <select class="form-control">
+                                                            <option>Choose title ...</option>
+                                                            <option value="Mr." {{ ($user->info['title'] == 'Mr.')? 'selected' : '' }}>Mr.</option>
+                                                            <option value="Mrs." {{ ($user->info['title'] == 'Mrs.')? 'selected' : '' }}>Mrs.</option>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label">Last Name</label>
-                                                        <input type="text" placeholder="Doe" class="form-control"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Mobile Number</label>
-                                                        <input type="text" placeholder="+1 646 580 DEMO (6284)" class="form-control"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Interests</label>
-                                                        <input type="text" placeholder="Design, Web etc." class="form-control"/>
+                                                        <label class="control-label">Full Name</label>
+                                                        <input type="text" placeholder="John Wilson" value="{{$user->info['fullname']}}" class="form-control"/>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Occupation</label>
-                                                        <input type="text" placeholder="Web Developer" class="form-control"/>
+                                                        <input type="text" placeholder="Web Developer" value='{{$user->info['job']}}' class="form-control"/>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label">About</label>
-                                                        <textarea class="form-control" rows="3" placeholder="We are KeenThemes!!!"></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Website Url</label>
-                                                        <input type="text" placeholder="http://www.mywebsite.com" class="form-control"/>
+                                                        <label class="control-label">Birth Date</label>
+                                                        <input class="form-control date-picker" size="16" type="text" value='{{$user->info['birthdate']}}' placeholder="Date of Birth" data-date-format="yyyy-mm-dd" >
                                                     </div>
                                                     <div class="margiv-top-10">
                                                         <a href="javascript:;" class="btn green-haze">
@@ -357,6 +281,7 @@
 @endsection
 
 @section('plugins')
+<script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/jquery.sparkline.min.js"></script>
 <script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js"></script>
 @endsection
@@ -365,6 +290,7 @@
 <script src="{{ url('/')}}/assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="{{ url('/')}}/assets/admin/layout3/scripts/layout.js" type="text/javascript"></script>
 <script src="{{ url('/')}}/assets/admin/layout3/scripts/demo.js" type="text/javascript"></script>
+<script src="{{ url('/')}}/assets/admin/pages/scripts/components-pickers.js" type="text/javascript"></script>
 <script src="{{ url('/')}}/assets/admin/pages/scripts/profile.js" type="text/javascript"></script>
 @endsection
 
@@ -376,6 +302,7 @@
         Layout.init(); // init current layout
         Demo.init();
         Profile.init(); // init page demo
+        ComponentsPickers.init();
     });
 </script>
 @endsection

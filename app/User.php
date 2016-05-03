@@ -25,19 +25,19 @@ class User extends Authenticatable {
     ];
 
     public function group() {
-        $this->belongsTo('App\Group', 'sec_id');
+        return $this->belongsTo('App\Group', 'sec_id');
     }
 
     public function info() {
-        $this->hasOne('App\Info', 'user_id');
+        return $this->hasOne('App\Info');
     }
 
     public function contacts() {
-        $this->hasMany('App\Contact', 'user_id');
+        return $this->hasMany('App\Contact', 'user_id');
     }
 
     public function projects() {
-        $this->hasMany('App\Project', 'user_id');
+        return $this->hasMany('App\Project', 'user_id');
     }
 
 }

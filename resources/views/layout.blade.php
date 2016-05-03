@@ -77,7 +77,7 @@
         <script src="{{ url('/') }}/assets/custom-js/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
         <script src="{{ url('/') }}/assets/custom-js/app.js" type="text/javascript"></script>
         <script src="{{ url('/') }}/assets/custom-js/angular-bind-html-compile.js" type="text/javascript"></script>
-        <script src="{{ url('/') }}/assets/custom-js/homeCtrl.js" type="text/javascript"></script>
+        <script src="{{ url('/') }}/assets/custom-js/profileCtrl.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
 
         <!-- BEGIN PAGE LEVEL PLUGINS -->

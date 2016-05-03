@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model {
 
-    protected $table = 'groups';
+    protected $table = 'security_groups';
     protected $fillable = ['name'];
 
     public function permissions() {
-        $this->belongsToMany('App\Permission', 'sec_perms', 'sec_id', 'perm_id');
+        return $this->belongsToMany('App\Permission', 'sec_perms', 'sec_id', 'perm_id');
     }
 
     public function users() {
-        $this->hasMany('App\User', 'sec_id');
+        return $this->hasMany('App\User', 'sec_id');
     }
 
 }

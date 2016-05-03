@@ -18,5 +18,5 @@ Route::get('/', function () {
 Route::auth();
 Route::post('/login', 'Auth\AuthController@authenticate');
 Route::get('/home', 'ManagerController@index');
-Route::get('/profile', 'ManagerController@profile');
+Route::get('/profile/{id?}', 'ManagerController@view_profile');
 Route::get('/view-users', 'ManagerController@view_users');

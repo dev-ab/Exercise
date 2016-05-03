@@ -33,8 +33,42 @@ class ManagerController extends Controller {
         return view('home', ['user' => Auth::user()]);
     }
 
-    public function profile() {
-        return view('profile');
+    public function view_profile(Request $request, $id = null) {
+        if ($id) {
+            $user = \App\User::findOrFail($id);
+        } else {
+            $user = Auth::user();
+        }
+
+        return view('profile', ['user' => $user]);
+    }
+
+    public function save_info(Request $request, $id) {
+        
+    }
+
+    public function save_avatar(Request $request, $id) {
+        
+    }
+
+    public function save_security(Request $request, $id) {
+        
+    }
+
+    public function add_project() {
+        
+    }
+
+    public function delete_project() {
+        
+    }
+
+    public function add_att() {
+        
+    }
+
+    public function delete_att() {
+        
     }
 
     //view system users
@@ -45,18 +79,13 @@ class ManagerController extends Controller {
         return view('home');
     }
 
-    //edit users info
-    public function edit_user() {
-        return view('home');
-    }
-
     //view security groups
     public function view_groups() {
         return view('home');
     }
 
     //edit security groups
-    public function edit_group() {
+    public function save_group() {
         return view('home');
     }
 

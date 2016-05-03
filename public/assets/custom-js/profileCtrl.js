@@ -1,4 +1,4 @@
-angular.module('homeCtrl', []).controller('HomeController', ['$scope', '$window', function ($scope, $window) {
+angular.module('profileCtrl', []).controller('ProfileController', ['$scope', '$window', function ($scope, $window) {
 
         var vm = this;
         //data arrays
