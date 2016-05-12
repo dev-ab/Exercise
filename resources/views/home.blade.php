@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                         </a>
-                        @can('view_users', $user)
+                        @if(Gate::check('view_users') || ($user->superAdmin))
                         <a href='/view-users'>
                             <div class="tile double bg-red-sunglo">
                                 <div class="tile-body">
@@ -53,8 +53,8 @@
                                 </div>
                             </div>
                         </a>
-                        @endcan
-                        @can('view_groups', $user)
+                        @endif
+                        @if(Gate::check('view_groups') || ($user->superAdmin))
                         <a href='/view-groups'>
                             <div class="tile double bg-blue-madison">
                                 <div class="tile-body">
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                         </a>
-                        @endcan
+                        @endif
                     </div>
                 </div>
             </div>

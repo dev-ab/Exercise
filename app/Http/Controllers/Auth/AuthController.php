@@ -65,7 +65,7 @@ use AuthenticatesAndRegistersUsers,
         return User::create([
                     'username' => $data['username'],
                     'email' => $data['email'],
-                    'password' => bcrypt($data['password']),
+                    'password' => password_hash($data['password'], PASSWORD_BCRYPT),
         ]);
     }
 
@@ -77,9 +77,10 @@ use AuthenticatesAndRegistersUsers,
     public function authenticate(Request $request) {
         $email = $request->input('email');
         $password = $request->input('password');
+        $remember = $request->input('remember');
 
-        if (Auth::attempt(['email' => $email, 'password' => $password]) ||
-                Auth::attempt(['username' => $email, 'password' => $password])) {
+        if (Auth::attempt(['email' => $email, 'password' => $password], $remember) ||
+                Auth::attempt(['username' => $email, 'password' => $password], $remember)) {
             // Authentication passed...
             return redirect()->intended('/home');
         } else {

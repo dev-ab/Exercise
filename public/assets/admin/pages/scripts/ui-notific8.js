@@ -3,14 +3,13 @@ var UINotific8 = function () {
     return {
         //main function to initiate the module
         init: function () {
-
             
                     $('#notific8_show').click(function(event) {
                         var settings = {
-                                theme: $('#notific8_theme').val(),
-                                sticky: $('#notific8_sticky').is(':checked'),
-                                horizontalEdge: $('#notific8_pos_hor').val(),
-                                verticalEdge: $('#notific8_pos_ver').val()
+                                theme: 'lime',
+                                sticky: false,
+                                horizontalEdge: 'right',
+                                verticalEdge: 'top'
                             },
                             $button = $(this);
                         

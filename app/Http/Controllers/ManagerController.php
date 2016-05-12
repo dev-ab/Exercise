@@ -6,6 +6,10 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Auth;
 use JavaScript;
+use Manager;
+use Storage;
+Use Image;
+use Hash;
 
 class ManagerController extends Controller {
 
@@ -24,35 +28,103 @@ class ManagerController extends Controller {
      * @return \Illuminate\Http\Response
      */
     //view home page for users
-    public function index() {
-        $this->authorize(Auth::user());
-        JavaScript::put([
-            'user' => Auth::user()
-        ]);
-
+    public function index(Request $request) {
+        $this->authorize($request);
         return view('home', ['user' => Auth::user()]);
     }
 
     public function view_profile(Request $request, $id = null) {
+        Manager::get();
+        if ($id && Auth::user()->id != $id)
+            $this->authorize($request);
+
+        //specify user
         if ($id) {
             $user = \App\User::findOrFail($id);
         } else {
             $user = Auth::user();
         }
 
+        //load relations
+        @$user->info;
+        @$user->group->permissions;
+
+        //dump javascript vars
+        JavaScript::put([
+            'user' => $user,
+            'groups' => \App\Group::all()
+        ]);
+
         return view('profile', ['user' => $user]);
     }
 
     public function save_info(Request $request, $id) {
-        
+        if (Auth::user()->id != $id)
+            $this->authorize($request);
+
+        $user = \App\User::findOrFail($id);
+        $data = $request->all();
+        $info = [
+            'title' => $data['title'],
+            'fullname' => $data['fullname'],
+            'job' => $data['job'],
+            'birthdate' => $data['birthdate'],
+        ];
+        $user->info()->update($info);
+        return response()->json([]);
     }
 
     public function save_avatar(Request $request, $id) {
-        
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
+
+        $user = \App\User::findOrFail($id);
+        $file = $request->file('0');
+        $res = fopen($file->path(), 'r+');
+        $filename = md5($user->id) . '/' . $file->getClientOriginalName();
+        $filethumb = md5($user->id) . '/thumb_' . $file->getClientOriginalName();
+        Storage::put($filename, $res);
+
+        $img = Image::make(fopen(storage_path('app/' . $filename), 'r+'))
+                ->resize(125, 125);
+        $img->save(storage_path('app/' . $filethumb));
+
+        $user->info()->update(['profile_pic' => $filename, 'profile_thumb' => $filethumb]);
+
+        return response()->json([]);
     }
 
-    public function save_security(Request $request, $id) {
-        
+    public function reload_user(Request $request, $id) {
+        $user = \App\User::findOrFail($id);
+
+        //load relations
+        @$user->info;
+        @$user->group->permissions;
+        return response()->json(['user' => $user]);
+    }
+
+    public function save_password(Request $request, $id) {
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
+        $user = \App\User::findOrFail($id);
+        if (Auth::user()->id == $user->id &&
+                !password_verify($request->input('current_password'), $user->password)) {
+            return response()->json(['success' => 0]);
+        }
+        $user->password = password_hash($request->input('password'), PASSWORD_BCRYPT);
+        $user->save();
+        return response()->json(['success' => 1]);
+    }
+
+    public function save_group(Request $request, $id) {
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
+
+        $gid = intval(substr($request->input('group'), 7));
+        $user = \App\User::findOrFail($id);
+        $group = \App\Group::findOrFail($gid);
+        $user->group()->associate($group)->save();
+        return response()->json([]);
     }
 
     public function add_project() {
@@ -81,11 +153,6 @@ class ManagerController extends Controller {
 
     //view security groups
     public function view_groups() {
-        return view('home');
-    }
-
-    //edit security groups
-    public function save_group() {
         return view('home');
     }
 
