@@ -1,5 +1,4 @@
-var app = angular.module('MyApp', ['xeditable', "ui.bootstrap", "angular-bind-html-compile",
-    'profileCtrl']);
-app.run(function (editableOptions) {
-    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+var app = angular.module('MyApp', ["ui.bootstrap", 'profileCtrl', 'groupsCtrl']);
+app.run(function () {
+    
 });

@@ -33,10 +33,19 @@ class ManagerController extends Controller {
         return view('home', ['user' => Auth::user()]);
     }
 
+    //view system users
+    public function view_users(Request $request) {
+
+        $this->authorize('view_users', $request);
+
+        $users = \App\User::with('info')->where('id', '!=', Auth::user()->id)->get();
+
+        return view('users', ['users' => $users]);
+    }
+
     public function view_profile(Request $request, $id = null) {
-        Manager::get();
         if ($id && Auth::user()->id != $id)
-            $this->authorize($request);
+            $this->authorize('view_users', $request);
 
         //specify user
         if ($id) {
@@ -45,9 +54,7 @@ class ManagerController extends Controller {
             $user = Auth::user();
         }
 
-        //load relations
-        @$user->info;
-        @$user->group->permissions;
+        $user->load('info', 'group.permissions', 'projects.attachments');
 
         //dump javascript vars
         JavaScript::put([
@@ -60,7 +67,7 @@ class ManagerController extends Controller {
 
     public function save_info(Request $request, $id) {
         if (Auth::user()->id != $id)
-            $this->authorize($request);
+            $this->authorize('save_info', $request);
 
         $user = \App\User::findOrFail($id);
         $data = $request->all();
@@ -98,8 +105,7 @@ class ManagerController extends Controller {
         $user = \App\User::findOrFail($id);
 
         //load relations
-        @$user->info;
-        @$user->group->permissions;
+        $user->load('info', 'group.permissions', 'projects.attachments');
         return response()->json(['user' => $user]);
     }
 
@@ -127,43 +133,102 @@ class ManagerController extends Controller {
         return response()->json([]);
     }
 
-    public function add_project() {
-        
+    public function save_project(Request $request, $id) {
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
+
+        $user = \App\User::findOrFail($id);
+
+        if ($request->input('id') != 'null') {
+            $project = \App\Project::findOrFail($request->input('id'));
+            $project->update($request->all());
+        } else {
+            $project = \App\Project::create($request->all());
+        }
+
+        $project->user()->associate($user)->save();
+
+        foreach ($request->file('file') as $file) {
+            $res = fopen($file->path(), 'r+');
+            $size = $file->getSize();
+            $filename = md5($user->id) . '/' . rand(1, 1000000) . $file->getClientOriginalName();
+            Storage::put($filename, $res);
+            $att = \App\Attachment::create(['url' => $filename, 'size' => $size]);
+            $att->project()->associate($project)->save();
+        }
     }
 
-    public function delete_project() {
-        
+    public function delete_project(Request $request, $id) {
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
+
+        $user = \App\User::findOrFail($id);
+        $proj = $user->projects()->where('id', $request->input('id'))->get();
+        $proj = $proj[0];
+        $proj->attachments()->delete();
+        $proj->delete();
     }
 
-    public function add_att() {
-        
+    public function delete_att(Request $request, $id) {
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
+
+        $user = \App\User::findOrFail($id);
+        $proj = $user->projects()->where('id', $request->input('id'))->get();
+        $proj = $proj[0];
+        $proj->attachments()->where('url', $request->input('url'))->delete();
     }
 
-    public function delete_att() {
-        
-    }
+    public function delete_user(Request $request, $id) {
+        if (Auth::user()->id != $id)
+            $this->authorize('save_info', $request);
 
-    //view system users
-    public function view_users() {
-
-        $this->authorize();
-
-        return view('home');
+        $user = \App\User::findOrFail($id);
+        foreach ($user->projects as $proj) {
+            $proj->attachments()->delete();
+        }
+        $user->projects()->delete();
+        $user->delete();
     }
 
     //view security groups
-    public function view_groups() {
-        return view('home');
+    public function view_groups(Request $request) {
+        $this->authorize('view_groups', $request);
+        JavaScript::put([
+            'groups' => \App\Group::with('permissions')->get(),
+            'permissions' => \App\Permission::all()
+        ]);
+        return view('groups');
     }
 
-    //view user projects
-    public function view_projects() {
-        return view('home');
+    public function update_group(Request $request, $id) {
+        $this->authorize('save_groups', $request);
+        $data = $request->all();
+
+        if ($id == 'null') {
+            $group = \App\Group::create($data);
+        } else {
+            $group = \App\Group::findOrFail($id);
+            $group->update($data);
+        }
+
+        if (isset($data['permissions'])) {
+            $group->permissions()->sync(array_keys($data['permissions']));
+        } else {
+            $group->permissions()->sync([]);
+        }
     }
 
-    // edit user projects
-    public function edit_project() {
-        return view('home');
+    public function delete_group(Request $request, $id) {
+        $this->authorize('save_groups', $request);
+
+        $group = \App\Group::findOrFail($id);
+        $group->permissions()->sync([]);
+        $group->delete();
+    }
+
+    public function reload_groups() {
+        return response()->json(['groups' => \App\Group::with('permissions')->get()]);
     }
 
 }

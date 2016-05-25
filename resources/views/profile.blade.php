@@ -9,36 +9,80 @@
 <link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/admin/pages/css/profile.css" />
 <link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/admin/pages/css/tasks.css" />
 <link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/gallary/lightgallery.css" />
+<link rel="stylesheet" type="text/css" href="{{ url('/')}}/assets/global/plugins/dropzone/css/dropzone.css" />
 @endsection
 
 @section('container')
 <style>
-    .g-icon{
-        color:#5b9bd1;
-        font-size: 32px !important;
-        margin-right: 10px;
+    
+
+    .cont {
+        width: 100%;
+        height:150px;
+        position: relative;
     }
-    #hov {
+    .img{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .hov {
         float: left;
         position: absolute;
-        top:80%;
-        left:40%;
+        width:100%;
+        height:100%;
+        top:0;
+        left:0;
         z-index: 1000;
         padding: 20px;
         color: #FFFFFF;
         font-weight: bold;
         display: none;
     }
-    #img:hover{
-        opacity: .7;
+    .titles{
+        position: absolute;
+        background-color: black;
+        width:90%;
+        padding: 10px;
+    }
+    .tit{
+        font-size: 16px;
+        height:30px;
+    }
+    .desc{
+        height:0px;
+        visibility: hidden;
+    }
+    
+    .titles:hover .desc {
+        height:100%;
+        visibility: visible;
+    }
+    
+    .icons{
+        position: absolute;
+        padding: 10px;
+        top:100%;
+        left:40%;
+    }
+    .g-icon{
+        color:#000000;
+        font-size: 32px !important;
+        margin-right: 10px;
+    }
+    .img:hover{
+        opacity: .8;
+        cursor: pointer;
     }
 
-    #hov:hover{
+    .hov:hover{
         display: block;
         cursor: pointer;
     }
 
-    #img:hover + #hov {
+    .img:hover + .hov {
         display: block;
         z-index: 10000;
     }
@@ -261,34 +305,65 @@
                                             <!-- PRIVACY SETTINGS TAB -->
                                             <div class="tab-pane" id="tab_1_4">
                                                 <div class="row">
-                                                    <div class="col col-xs-12 col-md-6">
-                                                        <div id="img" class="lightgallery">
-                                                            <a href="http://ex.localhost/img/c4ca4238a0b923820dcc509a6f75849b/55.jpg">
-                                                                <img width = "100%" src="http://ex.localhost/img/c4ca4238a0b923820dcc509a6f75849b/55.jpg"/>
-                                                            </a>
-                                                        </div>
-                                                        <div id="hov">
-                                                            <i class="fa fa-pencil-square fa-5x g-icon"></i>
-                                                            <i class="fa fa-trash fa-5x g-icon"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col col-xs-12 col-md-6">
-                                                        <div id="img" class="lightgallery">
-                                                            <a href="http://ex.localhost/img/c4ca4238a0b923820dcc509a6f75849b/54.jpg">
-                                                                <img width = "100%" src="http://ex.localhost/img/c4ca4238a0b923820dcc509a6f75849b/54.jpg"/>
-                                                            </a>
-                                                            <a class="hide" href="http://ex.localhost/img/c4ca4238a0b923820dcc509a6f75849b/55.jpg">
-                                                                <img width = "100%" src="http://ex.localhost/img/c4ca4238a0b923820dcc509a6f75849b/55.jpg"/>
-                                                            </a>
-                                                        </div>
-                                                        <div id="hov">
-                                                            <i class="fa fa-pencil-square fa-5x g-icon"></i>
-                                                            <i class="fa fa-trash fa-5x g-icon"></i>
+                                                    <a title="Add new project" data-toggle="modal" href="#basic" ng-click="loadProject(null)">
+                                                        <i style="margin-left: 50px;font-size: 32px;" class="glyphicon glyphicon-plus"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col col-xs-12 col-md-6" style="margin-bottom:190px;" ng-repeat="proj in user.projects">
+                                                        <div class="cont">
+                                                            <div class="lightgallery img">
+                                                                <div data="http://ex.localhost/img/@{{att.url}}" ng-repeat="att in proj.attachments" ng-if="$index == 0">
+                                                                    <img class="imag" width = "100%" src="http://ex.localhost/img/@{{att.url}}"/>
+                                                                </div>
+
+                                                                <div class="hide" data="http://ex.localhost/img/@{{att.url}}" ng-repeat="att in proj.attachments" ng-if="$index > 0">
+                                                                    <img width = "100%" src="http://ex.localhost/img/@{{att.url}}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="hov">
+                                                                <div class="titles">
+                                                                    <div class="tit">@{{proj.name}}</div>
+                                                                    <div class="desc">@{{proj.description}}</div>
+                                                                </div>
+                                                                <div class="icons">
+                                                                    <a title="Add new project" data-toggle="modal" href="#basic" ng-click="loadProject(proj)">
+                                                                        <i class="fa fa-pencil-square fa-5x g-icon"></i>
+                                                                    </a>
+                                                                    <i class="fa fa-trash fa-5x g-icon" ng-click="deleteProject(proj.id)"></i>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- END PRIVACY SETTINGS TAB -->
+                                            <div class="modal fade" id="basic" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-full">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                                            <h4 class="modal-title">Add/Edit Project</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form id="proj_form">
+                                                                <input class="form-control margin-bottom-10" id="ntemp" name="ntemp" placeholder="Project name">
+                                                                <textarea class="form-control margin-bottom-10" id="dtemp" name="dtemp" placeholder="Project description"></textarea>
+                                                            </form>
+                                                            <form class="dropzone" id="dropzone">
+                                                                <input type="hidden" name="id" value="null">
+                                                                <input type="hidden" name="name">
+                                                                <input type="hidden" name="description">
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn blue" ng-disabled="events.processing_info" ng-click="saveProject()">Save</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -313,6 +388,7 @@
 <script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/jquery-validation/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/jquery-validation/additional-methods.min.js"></script>
 <script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/jquery-validation/localization/messages_ar.min.js"></script>
+<script type="text/javascript" src="{{ url('/')}}/assets/global/plugins/dropzone/dropzone.js"></script>
 
 @endsection
 
@@ -327,6 +403,7 @@
 <script src="{{ url('/')}}/assets/gallary/lightgallery.js" type="text/javascript"></script>
 <script src="{{ url('/')}}/assets/gallary/lg-thumbnail.js" type="text/javascript"></script>
 <script src="{{ url('/')}}/assets/gallary/lg-fullscreen.js" type="text/javascript"></script>
+<script src="{{ url('/')}}/assets/admin/pages/scripts/form-dropzone.js" type="text/javascript"></script>
 @endsection
 
 @section('javascript')
@@ -339,9 +416,52 @@
                                                                 avatar_updated: 'Avatar updated successfully!',
                                                                 pass_updated_head: 'User password',
                                                                 pass_updated: 'Password updated successfully!',
+                                                                project_updated_head: 'Project',
+                                                                project_updated: 'Project saved successfully!',
+                                                                proj_deleted_head: 'Project',
+                                                                proj_deleted: 'Project deleted successfully!',
                                                                 error_head: 'Error',
                                                                 error: 'Unauthorized Action!',
                                                             }
+                                                            Dropzone.autoDiscover = false;
+                                                            var myDropzone = new Dropzone("#dropzone", {
+                                                                    url: "/save-avatar/1",
+                                                                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                                                    autoProcessQueue: false,
+                                                                    addRemoveLinks: false,
+                                                                    maxFilesize: 5,
+                                                                    maxFiles: 15,
+                                                                    acceptedFiles: 'image/*',
+                                                                    uploadMultiple: true,
+                                                                    parallelUploads: 15,
+                                                                    init: function() {
+                                                                      this.on("addedfile", function(file) {
+
+                                                                        // Create the remove button
+                                                                        var removeButton = Dropzone.createElement("<button>Remove file</button>");
+
+
+                                                                        // Capture the Dropzone instance as closure.
+                                                                        var _this = this;
+
+                                                                        // Listen to the click event
+                                                                        removeButton.addEventListener("click", function(e) {
+                                                                          // Make sure the button click doesn't submit the form:
+                                                                          e.preventDefault();
+                                                                          e.stopPropagation();
+                                                                          angular.element($('#basic')).scope().deleteAtt(file);
+
+                                                                          // Remove the file preview.
+                                                                          _this.removeFile(file);
+                                                                          // If you want to the delete the file on the server as well,
+                                                                          // you can do the AJAX request here.
+                                                                        });
+
+                                                                        // Add the button to the file preview element.
+                                                                        file.previewElement.appendChild(removeButton);
+                                                                      });
+    }
+                                                            });
                                                             jQuery(document).ready(function () {
                                                                 // initiate layout and plugins
                                                                 Metronic.init(); // init metronic core components
@@ -350,8 +470,17 @@
                                                                 Profile.init(); // init page demo
                                                                 ComponentsPickers.init();
                                                                 UINotific8.init();
-                                                                
-                                                                $(".lightgallery").lightGallery(); 
+
+                                                                $('body').on('click', '.lightgallery', function() {
+                                                                    var images = [];
+                                                                    $(this).children().each(function(i,e){
+                                                                        images[i] = {
+                                                                          'src': $(this).attr('data'),
+                                                                          'thumb': $(this).attr('data')
+                                                                        };
+                                                                    });
+                                                                    $(this).lightGallery({dynamic: true, dynamicEl: images});
+                                                                });
                                                                 
                                                             });
 </script>

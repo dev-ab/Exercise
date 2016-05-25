@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model {
 
     protected $table = 'projects';
-    protected $fillable = ['name', 'description', 'link'];
+    protected $fillable = ['name', 'description'];
 
     public function user() {
-        $this->belongsTo('App\User', 'user_id');
+        return $this->belongsTo('App\User', 'user_id');
     }
 
     public function attachments() {
-        $this->hasMany('App\Attachments', 'project_id');
+        return $this->hasMany('App\Attachment', 'project_id');
     }
 
 }

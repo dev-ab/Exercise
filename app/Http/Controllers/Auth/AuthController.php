@@ -82,7 +82,7 @@ use AuthenticatesAndRegistersUsers,
         if (Auth::attempt(['email' => $email, 'password' => $password], $remember) ||
                 Auth::attempt(['username' => $email, 'password' => $password], $remember)) {
             // Authentication passed...
-            return redirect()->intended('/home');
+            return redirect()->intended('/');
         } else {
             abort('503');
         }

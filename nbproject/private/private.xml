@@ -3,12 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/xampp/htdocs/Exercise/resources/views/groups.blade.php</file>
             <file>file:/C:/xampp/htdocs/Exercise/app/Http/routes.php</file>
             <file>file:/C:/xampp/htdocs/Exercise/resources/views/home.blade.php</file>
-            <file>file:/C:/xampp/htdocs/Exercise/app/Http/Controllers/ManagerController.php</file>
             <file>file:/C:/xampp/htdocs/Exercise/public/assets/custom-js/profileCtrl.js</file>
+            <file>file:/C:/xampp/htdocs/Exercise/public/assets/custom-js/groupsCtrl.js</file>
+            <file>file:/C:/xampp/htdocs/Exercise/resources/views/header.blade.php</file>
+            <file>file:/C:/xampp/htdocs/Exercise/resources/views/auth/login.blade1.php</file>
             <file>file:/C:/xampp/htdocs/Exercise/app/Policies/RequestPolicy.php</file>
             <file>file:/C:/xampp/htdocs/Exercise/resources/views/profile.blade.php</file>
+            <file>file:/C:/xampp/htdocs/Exercise/resources/views/users.blade.php</file>
+            <file>file:/C:/xampp/htdocs/Exercise/resources/views/outlayout.blade.php</file>
+            <file>file:/C:/xampp/htdocs/Exercise/app/Http/Controllers/Auth/AuthController.php</file>
+            <file>file:/C:/xampp/htdocs/Exercise/app/Http/Controllers/ManagerController.php</file>
+            <file>file:/C:/xampp/htdocs/Exercise/resources/views/auth/login.blade.php</file>
         </group>
     </open-files>
 </project-private>

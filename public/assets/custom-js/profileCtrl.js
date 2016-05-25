@@ -165,10 +165,12 @@ angular.module('profileCtrl', []).controller('ProfileController', ['$scope', '$w
                 success: function (data) {
                     //console.log(JSON.stringify(data));
                     $scope.events.processing_info = false;
-                    if (data.success)
+                    if (data.success) {
+                        $('#pass_form').find("input[type=password]").val("");
                         $.notific8($window.msgs.pass_updated, {heading: $window.msgs.pass_updated_head, theme: 'lime'});
-                    else
+                    } else {
                         $scope.vars.pass_err = true;
+                    }
                     $scope.$apply();
                 },
                 error: function (c) {
@@ -183,10 +185,6 @@ angular.module('profileCtrl', []).controller('ProfileController', ['$scope', '$w
 
         $scope.saveGroup = function () {
             $scope.events.processing_info = true;
-            if (!$('#pass_form').valid()) {
-                $scope.events.processing_info = false;
-                return;
-            }
             $.ajax({
                 url: '/save-group/' + $scope.user.id,
                 type: 'post',
@@ -195,6 +193,112 @@ angular.module('profileCtrl', []).controller('ProfileController', ['$scope', '$w
                     console.log(JSON.stringify(data));
                     $scope.events.processing_info = false;
                     $.notific8($window.msgs.pass_updated, {heading: $window.msgs.pass_updated_head, theme: 'lime'});
+                    $scope.$apply();
+                },
+                error: function (c) {
+                    console.log(c.responseText);
+                    $scope.events.processing_info = false;
+                    $.notific8($window.msgs.error, {heading: $window.msgs.error_head, theme: 'ruby'});
+                    $scope.$apply();
+                }
+            });
+        }
+
+        $scope.loadProject = function (proj) {
+            $window.myDropzone.removeAllFiles();
+            $window.myDropzone.options.maxFiles = 15;
+            if (proj == null) {
+                $('input[name="id"]').val('null');
+                $('#ntemp').val('');
+                $('#dtemp').val('');
+            } else {
+                $('input[name="id"]').val(proj.id);
+                $('#ntemp').val(proj.name);
+                $('#dtemp').val(proj.description);
+                for (var i = 0; i < proj.attachments.length; i++) {
+                    //alert(JSON.stringify(proj.attachments[i]));
+                    var mockFile = {name: proj.attachments[i].url, size: proj.attachments[i].size, id: proj.id};
+                    $window.myDropzone.emit("addedfile", mockFile);
+                    $window.myDropzone.emit("thumbnail", mockFile, 'http://ex.localhost/img/' + proj.attachments[i].url);
+                    $window.myDropzone.emit("complete", mockFile);
+                    $window.myDropzone.emit("success", mockFile);
+                    $window.myDropzone.files.push(mockFile);
+                    $window.myDropzone.options.maxFiles = $window.myDropzone.options.maxFiles - 1;
+                }
+            }
+        }
+
+
+        $scope.saveProject = function () {
+            $('#proj_form').validate({
+                rules: {
+                    ntemp: {
+                        required: true
+                    },
+                    dtemp: {
+                        required: true,
+                    }
+                }
+            });
+
+            $scope.events.processing_info = true;
+            if (!$('#proj_form').valid()) {
+                $scope.events.processing_info = false;
+                return;
+            }
+
+            $('input[name="name"]').val($('#ntemp').val());
+            $('input[name="description"]').val($('#dtemp').val());
+            $window.myDropzone.options.url = '/save-project/' + $scope.user.id;
+            $window.myDropzone.processQueue();
+            myDropzone.on("successmultiple", function (a, data) {
+                console.log(data);
+                $scope.reloadUser();
+                $scope.$apply();
+                $('#basic').modal('toggle');
+                $scope.events.processing_info = false;
+                $.notific8($window.msgs.project_updated, {heading: $window.msgs.project_updated_head, theme: 'lime'});
+            });
+            myDropzone.on("errormultiple", function (a, data) {
+                console.log(data);
+                $scope.events.processing_info = false;
+                $.notific8($window.msgs.error, {heading: $window.msgs.error_head, theme: 'ruby'});
+            });
+            $scope.events.processing_info = false;
+        }
+
+        $scope.deleteProject = function (id) {
+            $scope.events.processing_info = true;
+            $.ajax({
+                url: '/delete-project/' + $scope.user.id,
+                type: 'post',
+                data: {id: id},
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                    $scope.events.processing_info = false;
+                    $.notific8($window.msgs.proj_deleted, {heading: $window.msgs.proj_deleted_head, theme: 'lime'});
+                    $scope.reloadUser();
+                    $scope.$apply();
+                },
+                error: function (c) {
+                    console.log(c.responseText);
+                    $scope.events.processing_info = false;
+                    $.notific8($window.msgs.error, {heading: $window.msgs.error_head, theme: 'ruby'});
+                    $scope.$apply();
+                }
+            });
+        }
+        $scope.deleteAtt = function (file) {
+            $scope.events.processing_info = true;
+            $.ajax({
+                url: '/delete-att/' + $scope.user.id,
+                type: 'post',
+                data: {id: file.id, url: file.name},
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                    $scope.events.processing_info = false;
+                    $.notific8($window.msgs.proj_deleted, {heading: $window.msgs.proj_deleted_head, theme: 'lime'});
+                    $scope.reloadUser();
                     $scope.$apply();
                 },
                 error: function (c) {

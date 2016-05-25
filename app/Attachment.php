@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attachment extends Model {
 
-    protected $table = 'users_info';
-    protected $fillable = ['title', 'fullname', 'job', 'birthdate'];
+    protected $table = 'attachments';
+    protected $fillable = ['url', 'size'];
 
     public function project() {
-        $this->belongsTo('App\Project', 'project_id');
+        return $this->belongsTo('App\Project', 'project_id');
     }
 
 }

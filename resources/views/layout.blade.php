@@ -73,13 +73,11 @@
         <script src="{{ url('/')}}/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="{{ url('/')}}/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
         <script src="{{ url('/')}}/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-        <script src="{{ url('/')}}/assets/custom-js/moment.js" type="text/javascript"></script>
         <script src="{{ url('/')}}/assets/custom-js/angular.min.js" type="text/javascript"></script>
-        <script src="{{ url('/')}}/assets/custom-js/xeditable.js" type="text/javascript"></script>
         <script src="{{ url('/')}}/assets/custom-js/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
         <script src="{{ url('/')}}/assets/custom-js/app.js" type="text/javascript"></script>
-        <script src="{{ url('/')}}/assets/custom-js/angular-bind-html-compile.js" type="text/javascript"></script>
         <script src="{{ url('/')}}/assets/custom-js/profileCtrl.js" type="text/javascript"></script>
+        <script src="{{ url('/')}}/assets/custom-js/groupsCtrl.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
 
         <!-- BEGIN PAGE LEVEL PLUGINS -->
